@@ -56,6 +56,11 @@ window.onload = () => {
   }
 };
 
+// Pick backend base URL automatically: localhost for dev, deployed for production
+const API_BASE = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost')
+  ? 'http://localhost:5000'
+  : 'https://eestronic-project.onrender.com'; // replace with your Render URL if different
+
 document.addEventListener("DOMContentLoaded", () => {
   // GSAP Animations (only if gsap is loaded)
   if (typeof gsap !== 'undefined') {
@@ -180,7 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const timeout = setTimeout(() => controller.abort(), 10000); // 10s timeout
 
         // Make sure this URL points to your backend (server.js listens on port 5000)
-        const response = await fetch('http://localhost:5000/send', {
+        const response = await fetch(`${API_BASE}/send`, {
           method: 'POST',
           mode: 'cors',
           headers: { 'Content-Type': 'application/json' },
@@ -199,13 +204,18 @@ document.addEventListener("DOMContentLoaded", () => {
           throw new Error(errMsg);
         }
 
-  const result = await response.json();
+        let result = {};
+        try {
+          result = await response.json();
+        } catch (_) {
+          result = { message: '' };
+        }
 
-  // Inline success feedback
-  showMessage(contactForm, result.message || 'Message sent', 'success');
+        // Inline success feedback
+        showMessage(contactForm, result.message || 'Message sent', 'success');
 
-  // Reset form inputs on success
-  contactForm.reset();
+        // Reset form inputs on success
+        contactForm.reset();
       } catch (err) {
         console.error('Send failed:', err);
         if (err.name === 'AbortError') {
