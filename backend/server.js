@@ -5,7 +5,21 @@ const { Resend } = require("resend");
 require("dotenv").config();
 
 const app = express();
-app.use(cors());
+
+//  CORS settings — allow your local frontend & future deployed domain
+app.use(
+  cors({
+    origin: [
+      "http://127.0.0.1:5500",
+      "http://localhost:5500",
+      "https://olaoyeblessing.netlify.app" 
+    ],
+    methods: ["POST", "GET", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -18,8 +32,8 @@ app.post("/send", async (req, res) => {
 
   try {
     const response = await resend.emails.send({
-      from: "Your Portfolio <onboarding@resend.dev>", // sender name & verified domain or default address
-      to: process.env.RECEIVER_EMAIL, // your Gmail or any address to receive messages
+      from: "Your Portfolio <onboarding@resend.dev>", // sender name & verified domain or default Resend address
+      to: process.env.RECEIVER_EMAIL, // your Gmail (or other) to receive messages
       subject: `New message from ${name}`,
       text: `From: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
     });
@@ -30,6 +44,19 @@ app.post("/send", async (req, res) => {
     console.error("Error sending email:", error);
     res.status(500).json({ success: false, message: "Failed to send email." });
   }
+});
+
+// Handle preflight requests explicitly to ensure proper CORS headers for some environments
+app.options("/send", (req, res) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  // If using credentials, echo the origin and set allow-credentials
+  if (req.headers.origin && req.headers.origin.startsWith("http")) {
+    res.header("Access-Control-Allow-Origin", req.headers.origin);
+    res.header("Access-Control-Allow-Credentials", "true");
+  }
+  return res.sendStatus(204);
 });
 
 const PORT = process.env.PORT || 5000;
