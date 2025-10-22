@@ -1,41 +1,34 @@
-const express = require('express');
-const nodemailer = require('nodemailer');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-require('dotenv').config();
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const { Resend } = require("resend");
+require("dotenv").config();
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// Initialize Resend
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 // POST route to handle form submission
-app.post('/send', async (req, res) => {
+app.post("/send", async (req, res) => {
   const { name, email, message } = req.body;
 
-  // Configure transporter
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
-    }
-  });
-
-  // Mail options
-  const mailOptions = {
-    from: email,
-    to: process.env.EMAIL_USER,
-    subject: `New message from ${name}`,
-    text: `From: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
-  };
-
   try {
-    await transporter.sendMail(mailOptions);
-    res.status(200).json({ success: true, message: 'Email sent successfully!' });
+    const response = await resend.emails.send({
+      from: "Your Portfolio <onboarding@resend.dev>", // sender name & verified domain or default address
+      to: process.env.RECEIVER_EMAIL, // your Gmail or any address to receive messages
+      subject: `New message from ${name}`,
+      text: `From: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+    });
+
+    console.log("Email sent:", response);
+    res.status(200).json({ success: true, message: "Email sent successfully!" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: 'Failed to send email.' });
+    console.error("Error sending email:", error);
+    res.status(500).json({ success: false, message: "Failed to send email." });
   }
 });
 
