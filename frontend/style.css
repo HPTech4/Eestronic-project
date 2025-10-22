@@ -29,6 +29,63 @@ body {
     background-color: var(--bg-light);
     line-height: 1.6;
 }
+
+/* Inline form message styles */
+.form-message {
+    margin: 0 0 1rem 0;
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    transition: opacity 180ms ease, transform 180ms ease;
+    opacity: 0.98;
+    box-shadow: 0 1px 0 rgba(15,23,42,0.03), 0 6px 18px rgba(2,6,23,0.06);
+}
+
+.form-message.info {
+    background: #f8fafc; /* very light */
+    color: #0f172a;
+    border: 1px solid rgba(15,23,42,0.04);
+}
+
+.form-message.success {
+    background: #ecfdf5; /* green-50 */
+    color: #064e3b; /* green-900 */
+    border-left: 4px solid #10b981; /* green-500 */
+}
+
+.form-message.error {
+    background: #fff1f2; /* red-50 */
+    color: #7f1d1d; /* red-900 */
+    border-left: 4px solid #ef4444; /* red-500 */
+}
+
+/* Dismiss button inside messages */
+.form-message .dismiss-btn {
+    position: absolute;
+    right: 10px;
+    top: 8px;
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 4px;
+}
+
+.form-message { position: relative; }
+
+.form-message .dismiss-btn:focus {
+    outline: 2px solid rgba(59,130,246,0.25);
+}
+
+/* Improve focus outline for accessibility on submit buttons */
+button[type="submit"]:focus {
+    outline: 3px solid rgba(59,130,246,0.18);
+    outline-offset: 2px;
+}
 header {
     display: flex;
     justify-content: space-between;

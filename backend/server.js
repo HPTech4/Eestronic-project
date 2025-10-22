@@ -32,8 +32,8 @@ app.post("/send", async (req, res) => {
 
   try {
     const response = await resend.emails.send({
-      from: "Your Portfolio <onboarding@resend.dev>", // sender name & verified domain or default Resend address
-      to: process.env.RECEIVER_EMAIL, // your Gmail (or other) to receive messages
+      from: "Your Portfolio <onboarding@resend.dev>", 
+      to: process.env.RECEIVER_EMAIL, 
       subject: `New message from ${name}`,
       text: `From: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
     });

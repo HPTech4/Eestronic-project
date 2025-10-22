@@ -156,20 +156,110 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 })();
 
-  document.getElementById('contactForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = {
-      name: e.target.name.value,
-      email: e.target.email.value,
-      message: e.target.message.value
-    };
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = {
+        name: e.target.name.value,
+        email: e.target.email.value,
+        message: e.target.message.value
+      };
 
-    const response = await fetch('https://eestronics-api.onrender.com/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
+      try {
+        // UI: disable submit, show loading
+        const submitBtn = contactForm.querySelector('[type=submit]');
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.dataset.origText = submitBtn.textContent;
+          submitBtn.textContent = 'Sending...';
+        }
+
+        // Add an AbortController so requests don't hang forever
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
+        // Make sure this URL points to your backend (server.js listens on port 5000)
+        const response = await fetch('http://localhost:5000/send', {
+          method: 'POST',
+          mode: 'cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+          signal: controller.signal
+        });
+        clearTimeout(timeout);
+
+        if (!response.ok) {
+          // Try to parse JSON error body, otherwise throw generic
+          let errMsg = `Request failed with status ${response.status}`;
+          try {
+            const errJson = await response.json();
+            if (errJson && errJson.message) errMsg = errJson.message;
+          } catch (_) {}
+          throw new Error(errMsg);
+        }
+
+  const result = await response.json();
+
+  // Inline success feedback
+  showMessage(contactForm, result.message || 'Message sent', 'success');
+
+  // Reset form inputs on success
+  contactForm.reset();
+      } catch (err) {
+        console.error('Send failed:', err);
+        if (err.name === 'AbortError') {
+          showMessage(contactForm, 'Request timed out. Please try again.', 'error');
+        } else {
+          showMessage(contactForm, 'Failed to send message: ' + (err.message || err), 'error');
+        }
+      } finally {
+        // Restore submit button
+        const submitBtn = contactForm.querySelector('[type=submit]');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = submitBtn.dataset.origText || 'Send';
+        }
+      }
+    });
+  }
+
+// Helper to show inline messages above the form
+function showMessage(formEl, text, type = 'info') {
+  if (!formEl) return;
+  let msg = formEl.querySelector('.form-message');
+  if (!msg) {
+    msg = document.createElement('div');
+    msg.className = 'form-message';
+    msg.setAttribute('role', 'status');
+
+    // Container for the actual text so we don't clobber children
+    const txt = document.createElement('span');
+    txt.className = 'form-message-text';
+    msg.appendChild(txt);
+
+    // Add a dismiss button for manual close
+    const dismiss = document.createElement('button');
+    dismiss.type = 'button';
+    dismiss.className = 'dismiss-btn';
+    dismiss.setAttribute('aria-label', 'Dismiss message');
+    dismiss.innerHTML = '&times;';
+    // Click removes the message and clears any hide timeout
+    dismiss.addEventListener('click', () => {
+      clearTimeout(msg.hideTimeout);
+      if (msg.parentNode) msg.parentNode.removeChild(msg);
     });
 
-    const result = await response.json();
-    alert(result.message);
-  });
+    msg.appendChild(dismiss);
+    // Insert message container at the top of the form
+    formEl.insertBefore(msg, formEl.firstChild);
+  }
+  // Set the text inside the child span so existing children (dismiss) are preserved
+  const txtEl = msg.querySelector('.form-message-text');
+  if (txtEl) txtEl.textContent = text;
+  msg.classList.remove('success', 'error', 'info');
+  msg.classList.add(type);
+  // Auto-hide after 6 seconds
+  clearTimeout(msg.hideTimeout);
+  msg.hideTimeout = setTimeout(() => { if (msg.parentNode) msg.parentNode.removeChild(msg); }, 6000);
+}
