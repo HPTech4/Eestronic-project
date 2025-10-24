@@ -14,7 +14,7 @@ app.use(
       "http://localhost:5500",
       "https://olaoyeblessing.netlify.app" 
     ],
-    methods: ["POST", "GET", "OPTIONS"],
+    methods: ["POST", "GET", "OPTIONS"  ],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
