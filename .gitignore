@@ -32,7 +32,7 @@ Thumbs.db
 # Windows image file caches
 ehthumbs.db
 
-# Ignore package-lock if you use yarn (optional)
+# Ignore package-lock 
 package-lock.json
 
 # Ignore generated files
