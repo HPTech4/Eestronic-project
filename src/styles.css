@@ -1,0 +1,288 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Ensure any custom animations or themes are properly configured */
+/* Add additional styles below */
+
+/* Theme variables (converted from @theme inline to standard :root) */
+:root {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --font-display: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* LIGHT (default / primary) — clean, editorial, warm-neutral */
+:root {
+  --radius: 1rem;
+  --background: oklch(0.99 0.003 80); /* warm off-white */
+  --foreground: oklch(0.18 0.01 270); /* near-black */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.01 270);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.01 270);
+  --primary: oklch(0.18 0.01 270); /* near-black primary */
+  --primary-foreground: oklch(0.99 0.003 80);
+  --secondary: oklch(0.96 0.005 80);
+  --secondary-foreground: oklch(0.18 0.01 270);
+  --muted: oklch(0.96 0.005 80);
+  --muted-foreground: oklch(0.48 0.01 270);
+  --accent: oklch(0.94 0.01 80);
+  --accent-foreground: oklch(0.18 0.01 270);
+  --destructive: oklch(0.6 0.2 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.9 0.005 270);
+  --input: oklch(0.92 0.005 270);
+  --ring: oklch(0.6 0.18 30);
+  --surface: oklch(0.97 0.005 80);
+  --surface-2: oklch(0.94 0.008 80);
+  /* Brand accent — refined orange (not gimmicky neon) */
+  --brand: oklch(0.68 0.18 35); /* warm coral/orange */
+  --brand-foreground: oklch(0.99 0 0);
+
+  --gradient-brand: linear-gradient(135deg, oklch(0.72 0.19 40), oklch(0.62 0.2 25));
+  --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.04), 0 8px 24px -12px oklch(0 0 0 / 0.08);
+  --shadow-elevated: 0 2px 4px oklch(0 0 0 / 0.04), 0 20px 60px -20px oklch(0 0 0 / 0.18);
+}
+
+/* DARK — refined, near-black with same brand */
+.dark {
+  --background: oklch(0.14 0.005 270);
+  --foreground: oklch(0.96 0.005 80);
+  --card: oklch(0.18 0.005 270);
+  --card-foreground: oklch(0.96 0.005 80);
+  --popover: oklch(0.18 0.005 270);
+  --popover-foreground: oklch(0.96 0.005 80);
+  --primary: oklch(0.96 0.005 80);
+  --primary-foreground: oklch(0.14 0.005 270);
+  --secondary: oklch(0.22 0.008 270);
+  --secondary-foreground: oklch(0.96 0.005 80);
+  --muted: oklch(0.22 0.008 270);
+  --muted-foreground: oklch(0.68 0.01 270);
+  --accent: oklch(0.24 0.01 270);
+  --accent-foreground: oklch(0.96 0.005 80);
+  --destructive: oklch(0.65 0.22 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(1 0 0 / 0.1);
+  --input: oklch(1 0 0 / 0.12);
+  --ring: oklch(0.72 0.19 40);
+  --surface: oklch(0.18 0.005 270);
+  --surface-2: oklch(0.22 0.008 270);
+  --brand: oklch(0.74 0.18 40);
+  --brand-foreground: oklch(0.14 0.005 270);
+
+  --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.4), 0 8px 24px -12px oklch(0 0 0 / 0.5);
+  --shadow-elevated: 0 2px 4px oklch(0 0 0 / 0.4), 0 20px 60px -20px oklch(0 0 0 / 0.6);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-display);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: var(--brand);
+    color: var(--brand-foreground);
+  }
+}
+
+@layer utilities {
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    padding: 6rem 1.5rem;
+    overflow: hidden;
+    background:
+      radial-gradient(
+        circle at top,
+        color-mix(in oklab, var(--brand) 14%, transparent),
+        transparent 40%
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in oklab, var(--background) 92%, white),
+        var(--background)
+      );
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(
+        circle at 20% 20%,
+        color-mix(in oklab, var(--brand) 14%, transparent) 0 2px,
+        transparent 3px
+      ),
+      radial-gradient(
+        circle at 80% 10%,
+        color-mix(in oklab, var(--brand) 10%, transparent) 0 2px,
+        transparent 3px
+      );
+    opacity: 0.35;
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
+  }
+  .hero > * {
+    position: relative;
+    z-index: 1;
+  }
+  .profile-card {
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 9999px;
+    background: color-mix(in oklab, var(--card) 88%, transparent);
+    box-shadow: var(--shadow-elevated);
+    backdrop-filter: blur(18px);
+  }
+  .profile-media {
+    display: grid;
+    place-items: center;
+    width: 11rem;
+    height: 11rem;
+    border-radius: 9999px;
+    overflow: hidden;
+    background: linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--brand) 25%, white),
+      var(--surface)
+    );
+    border: 1px solid color-mix(in oklab, var(--brand) 28%, var(--border));
+  }
+  .profile-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.75rem 1.125rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease,
+      background-color 0.25s ease,
+      color 0.25s ease,
+      border-color 0.25s ease;
+  }
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+  .btn-primary {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    box-shadow: var(--shadow-soft);
+  }
+  .btn-primary:hover {
+    background: color-mix(in oklab, var(--primary) 88%, white);
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--foreground);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover {
+    border-color: var(--brand);
+    color: var(--brand);
+    background: color-mix(in oklab, var(--brand) 8%, transparent);
+  }
+  .text-brand {
+    color: var(--brand);
+  }
+  .bg-brand {
+    background-color: var(--brand);
+  }
+  .border-brand {
+    border-color: var(--brand);
+  }
+  .text-gradient-brand {
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  .shadow-elevated {
+    box-shadow: var(--shadow-elevated);
+  }
+  .grid-bg-subtle {
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
+  }
+  .dot-bg {
+    background-image: radial-gradient(var(--border) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .hover-lift {
+    transition:
+      transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+      border-color 0.4s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-elevated);
+    border-color: color-mix(in oklab, var(--brand) 35%, var(--border));
+  }
+  .will-anim {
+    will-change: transform, opacity;
+  }
+  .marquee {
+    animation: marquee 40s linear infinite;
+  }
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
